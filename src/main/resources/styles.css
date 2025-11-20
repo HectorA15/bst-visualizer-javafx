@@ -1,0 +1,52 @@
+
+.bottom-bar{
+    -fx-background-color: #21252b;
+    -fx-padding: 10px;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.typed-text{
+    -fx-text-color: white;
+    -fx-background-color: white;
+}
+
+.scroll-pane {
+  -fx-background-color: #282c34;
+  -fx-background-insets: 0;
+  -fx-border-color: transparent;
+}
+
+.central-panel {
+  -fx-background-color: #282c34;
+  -fx-padding: 0;
+  -fx-border-color: transparent;
+}
+
+.text-box {
+  -fx-background-color: #323844;
+  -fx-text-fill: white;
+  -fx-padding: 6 12 6 12;
+  -fx-font-size: 12;
+  -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-color: #323844;
+    -fx-text-fill: white;
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-font-size: 12;
+}
+
+.node {
+    -fx-background-color: #6a7790;
+    -fx-text-fill: white;
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-font-size: 12;
+}
