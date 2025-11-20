@@ -62,7 +62,7 @@ public class UI extends Application {
      searchView.setFitWidth(18);
       searchView.setFitHeight(18);
       searchView.setPreserveRatio(true);
-      searchView.setBlendMode(BlendMode.SCREEN);
+      searchView.setBlendMode(BlendMode.SCREEN);// quitar el fondo de la imagen 
     addView.setFitWidth(18);
     addView.setFitHeight(18);
     addView.setPreserveRatio(true);
