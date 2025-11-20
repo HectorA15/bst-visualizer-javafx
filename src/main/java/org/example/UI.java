@@ -53,10 +53,16 @@ public class UI extends Application {
   @Override
   public void start(@NotNull Stage stage) throws Exception {
     addImage = new Image(this.getClass().getResourceAsStream("/images/add.png"));
+     searchImage=new Image(this.getClass().getResourceAsStream("/images/search.jpg"));
     deleteImage = new Image(this.getClass().getResourceAsStream("/images/delete.png"));
     addView = new ImageView(addImage);
     deleteView = new ImageView(deleteImage);
+    searchView= new ImageView(searchImage);
     // adjust icon size
+     searchView.setFitWidth(18);
+      searchView.setFitHeight(18);
+      searchView.setPreserveRatio(true);
+      searchView.setBlendMode(BlendMode.SCREEN);
     addView.setFitWidth(18);
     addView.setFitHeight(18);
     addView.setPreserveRatio(true);
@@ -155,15 +161,28 @@ public class UI extends Application {
     panelPrincipal.setBottom(bottomBar);
     panelPrincipal.setCenter(scroll);
 
-    switchMode.setOnAction(
+ switchMode.setOnAction(
         Event -> {
-          if (eliminar == true) {
-            mode.setGraphic(addView);
-            eliminar = false;
-          } else {
-            mode.setGraphic(deleteView);
-            eliminar = true;
-          }
+            click++;
+            switch (click) {
+                case 1:
+                    mode.setGraphic(addView);
+                    break;
+                case 2:
+                    mode.setGraphic(deleteView);
+                    break;
+                case 3:
+                    mode.setGraphic(searchView);
+                    click=0;
+                    break;
+            }
+          //if (eliminar == true) {
+            //mode.setGraphic(addView);
+            // eliminar = false;
+            // } else {
+            //  mode.setGraphic(deleteView);
+            // eliminar = true;
+            // }
         });
 
     mode.setOnAction(
