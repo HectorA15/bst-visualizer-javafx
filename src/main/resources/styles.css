@@ -11,6 +11,9 @@
 .typed-text{
     -fx-text-color: white;
     -fx-background-color: white;
+    -fx-font-size: 14px;
+    -fx-padding: 6 12 6 12;
+    -fx-border-color: transparent;
 }
 
 .scroll-pane {
@@ -32,7 +35,13 @@
   -fx-font-size: 12;
   -fx-font-weight: bold;
 }
-
+.clear-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 6 12 6 12;
+    -fx-border-color: transparent;
+    -fx-font-size: 12;
+}
 .button {
     -fx-background-color: #323844;
     -fx-text-fill: white;
