@@ -322,49 +322,32 @@ public class UI extends Application {
   }
 
   private void handleDelete(int val) {
-    boolean deleted = arbol.delete(val);
-    if (!deleted) {
+    TreeNode nodeToDelete = arbol.search(val);
+    if (nodeToDelete == null) {
       Notification.show("WARNING", rootStack, "Node doesn't exists", 2000);
       return;
     }
-    // search and remove the button from the centralPanel
-    Button toRemove = null;
-    /* ¿Cómo funciona el javafx.Scene.Node? bueno es como la raíz, la base de todos los elementos visuales,
-    tiene subclases como Control (para hacer botones, paneles, etc.), Parent (el que usas para el getChildren(),
-     y Region. Imaginatelo como otro arbol que de ahi parten todos los métodos para crear lo visual*/
 
-    /*lo que hace esto es que child es una variable que apunta a cada nodo (objeto visual que se crea)
-    y por cada uno de esos nodos(objetos visuales como botones o paneles) va a verificar cuál es un boton que este dentro
-    del panel central y si el boton tiene el mismo valor que el que querías eliminar, se elimina*/
-    for (javafx.scene.Node child : centralPanel.getChildren()) { // iterate through children
-      // instance of revisa en TIEMPO REAL, si el nodo por el que está pasando es un boton, y al
-      // mismo tiempo se instancia
-      if (child instanceof Button b
-          && b.getText().equals(String.valueOf(val))) { // check if text matches
-        toRemove = b; // set a button to remove
-
-        break; // exit loop once found
+      if (nodeToDelete.getVisual() != null) {
+          centralPanel.getChildren().remove(nodeToDelete.getVisual());
+          // opcional: nodeToDelete.setVisual(null); // limpiar referencia
       }
-    }
-    if (toRemove != null) centralPanel.getChildren().remove(toRemove); // remove from panel
-    textField.clear();
 
-    // --- synchronize the UI with the logical tree after delete ---
-    TreeNode newRoot = arbol.getRoot(); // get current logical root
-    datoRaiz = newRoot;
-    if (newRoot != null) {
-      if (newRoot.getVisual() == null) {
-        Button b = new Button(String.valueOf(newRoot.getWeight()));
-        b.getStyleClass().add("button");
-        addEfectoHover(b);
-        newRoot.setVisual(b);
+      boolean deleted = arbol.delete(val);
+      if (!deleted) {
+          Notification.show("WARNING", rootStack, "Node doesn't exists", 2000);
+          return;
+      }else{
+          textField.clear();
       }
-      root = newRoot.getVisual();
-    } else {
-      root = null;
-    }
-    redrawTree();
-    updateOrdersText();
+
+      // sincroniza la raíz lógica y re-dibuja
+      datoRaiz = arbol.getRoot();
+      root = (datoRaiz != null) ? datoRaiz.getVisual() : null;
+
+      // reposiciona (PositionNodes creará visuales faltantes)
+      redrawTree();
+      updateOrdersText();
   }
 
   private void handleSearch(int val) {
