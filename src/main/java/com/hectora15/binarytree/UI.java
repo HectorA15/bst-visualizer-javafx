@@ -52,8 +52,8 @@ public class UI extends Application {
   Text orderText;
   Text orderPreText;
   Text orderPostText;
-  // como es una variable estatica final, osea que nunca va cambiar
-  // se escribe todo en mayusculas y separados por guiones bajos
+  // como es una variable estática final, o sea que nunca va a cambiar
+  // se escribe en mayúsculas y se separa con guiones bajos
   private static final String ORDER_TEXT_COLOR_HEX = "#b8c1cc";
 
   private void createImages() {
@@ -243,12 +243,11 @@ public class UI extends Application {
     del panel central y si el boton tiene el mismo valor que el que querías eliminar, se elimina*/
     for (javafx.scene.Node child : centralPanel.getChildren()) { // iterate through children
       // instance of revisa en TIEMPO REAL, si el nodo por el que está pasando es un boton, y al
-      // mismo tiempo de instancia
-      if (child instanceof Button b) { // check if a child is a button - Angel esto revisa que
-        if (b.getText().equals(String.valueOf(val))) { // check if text matches
-          toRemove = b; // set a button to remove
-          break; // exit loop once found
-        }
+      // mismo tiempo se instancia
+      if (child instanceof Button b
+          && b.getText().equals(String.valueOf(val))) { // check if text matches
+        toRemove = b; // set a button to remove
+        break; // exit loop once found
       }
     }
     if (toRemove != null) centralPanel.getChildren().remove(toRemove); // remove from panel
@@ -339,15 +338,23 @@ public class UI extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     arbol = new BinaryTree();
-
-    panelPrincipal = new BorderPane();
+    // primero cargamos recursos
     createImages();
-    createBottomBar();
+    panelPrincipal = new BorderPane();
+
     createCenterPanel();
 
+    // barra inferior que usa las ImageViews ya cargadas
+    createBottomBar();
+
+    // botones y textos que dependen del centralPanel y las imagenes
     createClearButton();
     createCreditsText();
+
+    // textos de recorridos
     createOrdersText();
+
+    // configura listeners/acciones (usa los botones ya creados)
     createActionButtons();
 
     panelPrincipal.setBottom(bottomBar);
