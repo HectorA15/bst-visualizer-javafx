@@ -270,7 +270,7 @@ public class UI extends Application {
   private void handleDelete(int val) {
     boolean deleted = arbol.delete(val);
     if (!deleted) {
-      Notification.show("WARNING", rootStack, "There is nothing to delete", 2000);
+      Notification.show("WARNING", rootStack, "Node doesn't exists", 2000);
       return;
     }
     // search and remove the button from the centralPanel
