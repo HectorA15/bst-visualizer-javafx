@@ -249,35 +249,73 @@ public class UI extends Application {
 
   // -----------handlers for the method configureModeButton-----------
   private void handleAdd(int val) {
-    if (root == null) { // first node (root)
-      root = new Button(String.valueOf(val));
-      addEfectoHover(root);
-      root.getStyleClass().add("button");
-      datoRaiz = new TreeNode(val);
-      datoRaiz.setVisual(root);
-      arbol.setRoot(datoRaiz);
+    if (arbol.getRoot() == null) {
+      // Inserta lógicamente
+      arbol.insert(val);
+      // Obtiene el nodo insertado
+      TreeNode inserted = arbol.search(val);
+      if (inserted != null) {
+        // crea visual y la enlaza
+        Button b = new Button(String.valueOf(val));
+        b.getStyleClass().add("button");
+        addEfectoHover(b);
+        inserted.setVisual(b);
+        // añade al panel (edgesLayer ya está en la posición 0)
+        centralPanel.getChildren().add(b);
 
-      centralPanel.getChildren().add(root);
-      root.setLayoutX(centralPanel.getWidth() / 2);
-      root.setLayoutY(30);
-      updateOrdersText();
-      textField.clear();
-    } else {
+        // sincroniza referencias locales
+        datoRaiz = arbol.getRoot();
+        if (datoRaiz != null && datoRaiz.getVisual() != null) {
+          root = datoRaiz.getVisual();
+        }
 
-      Button newNode = new Button(String.valueOf(val));
-      newNode.getStyleClass().add("button");
-      addEfectoHover(newNode);
-      calcularLugar(val, root, 1, datoRaiz, newNode);
+        // reposiciona todo el árbol y redibuja aristas
+        // redrawTree ya llama PositionNodes(datoRaiz) y luego redrawEdges
+        redrawTree();
+
+        updateOrdersText();
+      }
       textField.clear();
-      redrawTree();
-      updateOrdersText();
+      return;
     }
+
+    // Si ya existe el valor, notificar y salir
+    if (arbol.search(val) != null) {
+      Notification.show("WARNING", rootStack, "Node already exists", 1500);
+      textField.clear();
+      return;
+    }
+
+    // Inserta lógicamente
+    arbol.insert(val);
+    TreeNode inserted = arbol.search(val);
+
+    if (inserted == null) {
+      // esto no debería pasar nunca
+      Notification.show("ERROR", rootStack, "Insert failed", 1500);
+      textField.clear();
+      return;
+    }
+
+    // create visual and link together
+    Button b = new Button(String.valueOf(val));
+    b.getStyleClass().add("button");
+    addEfectoHover(b);
+    inserted.setVisual(b);
+
+    centralPanel.getChildren().add(b);
+
+    // synchronize
+    datoRaiz = arbol.getRoot();
+    if (datoRaiz != null && datoRaiz.getVisual() != null) {
+      root = datoRaiz.getVisual();
+    }
+
+    redrawTree();
+    updateOrdersText();
+    textField.clear();
   }
 
-  // angel lee esto!!!
-  /* ¿Cómo funciona el javafx.Scene.Node? bueno es como la raíz, la base de todos los elementos visuales,
-  tiene subclases como Control (para hacer botones, paneles, etc.), Parent (el que usas para el getChildren(),
-   y Region. Imaginatelo como otro arbol que de ahi parten todos los métodos para crear lo visual*/
   private void handleDelete(int val) {
     boolean deleted = arbol.delete(val);
     if (!deleted) {
@@ -286,6 +324,10 @@ public class UI extends Application {
     }
     // search and remove the button from the centralPanel
     Button toRemove = null;
+    /* ¿Cómo funciona el javafx.Scene.Node? bueno es como la raíz, la base de todos los elementos visuales,
+    tiene subclases como Control (para hacer botones, paneles, etc.), Parent (el que usas para el getChildren(),
+     y Region. Imaginatelo como otro arbol que de ahi parten todos los métodos para crear lo visual*/
+
     /*lo que hace esto es que child es una variable que apunta a cada nodo (objeto visual que se crea)
     y por cada uno de esos nodos(objetos visuales como botones o paneles) va a verificar cuál es un boton que este dentro
     del panel central y si el boton tiene el mismo valor que el que querías eliminar, se elimina*/
@@ -507,25 +549,67 @@ public class UI extends Application {
     return line;
   }
 
-  public void PositionNodes(
-      int weight, Button padreVisual, TreeNode nodoLogicoPadre, Button newButton) {
-    Map<TreeNode, Integer> indexMap = new HashMap<>();
-    Map<TreeNode, Integer> levelMap = new HashMap<>();
+  // calcula el lugar del nuevo nodo y lo inserta en el panel central
+
+  private void PositionNodes(TreeNode nodoLogicoPadre) {
 
     AtomicInteger counter = new AtomicInteger(0);
+    Map<TreeNode, Integer> indexMap = new HashMap<>();
+    Map<TreeNode, Integer> levelMap = new HashMap<>();
     int nivelActual = -1;
-    double vSpacing = 70;
-    double available = getViewportWidth();
-
     inOrderRec(nodoLogicoPadre, counter, nivelActual, levelMap, indexMap);
 
     int maxIndex = 0;
-    int level = 0;
 
+    for (Integer v : indexMap.values()) {
+      if (v != null && v > maxIndex) maxIndex = v;
+    }
+    int maxLevel = 0;
+    for (Integer v : levelMap.values()) {
+      if (v != null && v > maxLevel) maxLevel = v;
+    }
 
-    double total = maxIndex + 1;
-    double hSpacing = available / total;
+    double available = getViewportWidth();
+    double totalCols = Math.max(1, maxIndex + 1); // evita división por 0
+    double hSpacing = available / totalCols; // ancho de cada "columna"
+    double vSpacing = 70; // separacion vertical entre niveles
+    double topOffset = 30; // distancia desde el top de la vista
+    double offsetX = hSpacing * 0.02;
 
+    for (Map.Entry<TreeNode, Integer> entry : indexMap.entrySet()) {
+      TreeNode node = entry.getKey();
+      int idx = entry.getValue();
+      int lvl = levelMap.getOrDefault(node, 0);
+
+      // asegurar que exista el Button visual
+      if (node.getVisual() == null) {
+        Button b = new Button(String.valueOf(node.getWeight()));
+        b.getStyleClass().add("button");
+        addEfectoHover(b);
+        node.setVisual(b);
+        // asegúrate de añadirlo al panel central si aún no está
+        if (!centralPanel.getChildren().contains(b)) {
+          centralPanel.getChildren().add(b);
+        }
+      }
+
+      Button b = node.getVisual();
+
+      // forzar layout para obtener tamaño real
+      b.applyCss();
+      b.layout();
+      double nodeW = b.getBoundsInParent().getWidth();
+      double nodeH = b.getBoundsInParent().getHeight();
+
+      // calcular coordenadas
+      double xCenter = offsetX + idx * hSpacing + hSpacing / 2.0;
+      double x = xCenter - nodeW / 2.0;
+      double y = topOffset + lvl * vSpacing;
+
+      // asignar posición
+      b.setLayoutX(x);
+      b.setLayoutY(y);
+    }
   }
 
   private void inOrderRec(
@@ -541,8 +625,6 @@ public class UI extends Application {
     indexMapField.put(treeNode, counter.getAndIncrement());
     inOrderRec(treeNode.getRight(), counter, nivelActual, levelMap, indexMapField);
   }
-
-  // calcula el lugar del nuevo nodo y lo inserta en el panel central
 
   // get the current viewport width, fallback to centralPanel width
   private double getViewportWidth() {
