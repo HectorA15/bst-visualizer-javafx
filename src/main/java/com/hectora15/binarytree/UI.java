@@ -44,10 +44,12 @@ public class UI extends Application {
   Image deleteImage;
   Image searchImage;
   Image clearImage;
+  Image aleatoryImage;
   ImageView addView;
   ImageView deleteView;
   ImageView searchView;
   ImageView clearView;
+  ImageView aleatoryView;
 
   BinaryTree arbol;
 
@@ -71,10 +73,12 @@ public class UI extends Application {
             Objects.requireNonNull(this.getClass().getResourceAsStream("/images/search.png")));
     clearImage =
         new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/clear.png")));
+
     addView = new ImageView(addImage);
     deleteView = new ImageView(deleteImage);
     searchView = new ImageView(searchImage);
     clearView = new ImageView(clearImage);
+    aleatoryView = new ImageView(aleatoryImage);
     // adjust icon size
     addView.setFitWidth(18);
     addView.setFitHeight(18);
@@ -214,6 +218,7 @@ public class UI extends Application {
   private void handleAdd(int val) {
     if (root == null) { // first node (root)
       root = new Button(String.valueOf(val));
+        addEfectoHover(root);
       root.getStyleClass().add("button");
       datoRaiz = new TreeNode(val);
       datoRaiz.setVisual(root);
@@ -228,6 +233,7 @@ public class UI extends Application {
 
       Button newNode = new Button(String.valueOf(val));
       newNode.getStyleClass().add("button");
+        addEfectoHover(newNode);
       calcularLugar(val, root, 1, datoRaiz, newNode);
       textField.clear();
       redrawTree();
@@ -270,6 +276,7 @@ public class UI extends Application {
       if (newRoot.getVisual() == null) {
         Button b = new Button(String.valueOf(newRoot.getWeight()));
         b.getStyleClass().add("button");
+          addEfectoHover(b);
         newRoot.setVisual(b);
       }
       root = newRoot.getVisual();
@@ -568,4 +575,15 @@ public class UI extends Application {
     double vpWidth = scroll.getViewportBounds().getWidth();
     return vpWidth > 0 ? vpWidth : centralPanel.getWidth();
   }
+    public void addEfectoHover(Button b) {
+        String styleNormal = "-fx-background-radius: 50%; -fx-min-width: 40px; -fx-min-height: 40px;"; // tamaño del valor normal del boton
+        String styleilluminated = "-fx-background-radius: 50%; -fx-min-width: 40px; -fx-min-height: 40px; -fx-background-color: #1921c1;"; // valores del boton coloreado 
+        b.setStyle(styleNormal);
+        b.setOnMouseEntered(e -> {
+            b.setStyle(styleilluminated); //cambio a el uluminado
+        });
+        b.setOnMouseExited(e -> {
+            b.setStyle(styleNormal);// volmevos a el boton normal
+        });
+    }
 }
