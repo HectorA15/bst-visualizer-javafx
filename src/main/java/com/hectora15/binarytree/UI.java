@@ -269,10 +269,7 @@ public class UI extends Application {
           root = datoRaiz.getVisual();
         }
 
-        // reposiciona todo el árbol y redibuja aristas
-        // redrawTree ya llama PositionNodes(datoRaiz) y luego redrawEdges
         redrawTree();
-
         updateOrdersText();
       }
       textField.clear();
