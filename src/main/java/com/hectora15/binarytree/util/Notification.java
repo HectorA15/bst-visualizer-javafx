@@ -1,4 +1,4 @@
-package com.hectora15.binarytree;
+package com.hectora15.binarytree.util;
 
 import javafx.scene.layout.StackPane;
 import javafx.animation.FadeTransition;
