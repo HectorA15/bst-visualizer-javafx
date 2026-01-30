@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.hectora15.binarytree.view.TreeViewConstants.*;
 
 /**
- * Calcula posiciones X/Y para cada nodo del árbol
+ * Calculates X/Y positions for each tree node
  */
 public class NodePositionCalculator {
 

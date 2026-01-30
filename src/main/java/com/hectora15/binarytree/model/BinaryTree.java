@@ -1,7 +1,7 @@
 package com.hectora15.binarytree.model;
 
 /**
- * Árbol binario de búsqueda (lógica pura)
+ * Binary search tree (pure logic)
  */
 public class BinaryTree {
   private TreeNode root;

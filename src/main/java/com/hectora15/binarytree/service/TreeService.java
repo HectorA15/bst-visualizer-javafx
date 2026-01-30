@@ -4,7 +4,7 @@ import com.hectora15.binarytree.model.BinaryTree;
 import com.hectora15.binarytree.model.TreeNode;
 
 /**
- * Servicio que encapsula operaciones del árbol
+ * Service that encapsulates tree operations
  */
 public class TreeService {
     private BinaryTree tree;

@@ -11,7 +11,7 @@ import javafx.scene.Cursor;
 import static com.hectora15.binarytree.view.TreeViewConstants.*;
 
 /**
- * Factory de componentes visuales (sin lógica de negocio)
+ * Factory for visual components (no business logic)
  */
 public class TreeView {
 

@@ -17,7 +17,7 @@ import java.util.Map;
 import static com.hectora15.binarytree.view.TreeViewConstants.EDGE_LINE_WIDTH;
 
 /**
- * Renderiza el árbol visualmente (nodos y aristas)
+ * Renders the tree visually (nodes and edges)
  */
 public class TreeRenderer {
     private final TreeView view;

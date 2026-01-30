@@ -40,9 +40,9 @@ public class Notification {
           Text text = new Text(message);
           text.setTextAlignment(TextAlignment.CENTER);
           text.setFill(Color.WHITE);
-          // que el texto haga wrapping relativo al ancho del viewport
+          // Wrap text relative to the viewport width
           text.wrappingWidthProperty().bind(root.widthProperty().multiply(0.2));
-          // limitar ancho y alto de la notificación al 50% del viewport
+          // Limit notification width and height to 50% of the viewport
           box.maxWidthProperty().bind(root.widthProperty().multiply(0.15));
           box.setMaxHeight(fixedH);
           box.setMinHeight(fixedH);

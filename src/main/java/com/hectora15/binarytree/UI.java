@@ -18,7 +18,7 @@ import java.util.Objects;
 import static com.hectora15.binarytree.view.TreeViewConstants.*;
 
 /**
- * Clase principal - solo inicialización y conexión de componentes
+ * Main class - only initialization and wiring of components
  */
 public class UI extends Application {
 
